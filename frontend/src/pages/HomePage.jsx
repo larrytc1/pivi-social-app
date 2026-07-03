@@ -13,7 +13,8 @@ function HomePage() {
 
   useEffect(() => {
     fetchFeed();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offset]);
 
   const fetchFeed = async () => {
     setIsLoading(true);
