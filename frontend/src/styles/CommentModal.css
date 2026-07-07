@@ -75,6 +75,13 @@
   gap: 16px;
 }
 
+.no-comments {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
 .comment-item {
   display: flex;
   gap: 12px;
@@ -121,10 +128,13 @@
   cursor: pointer;
   display: inline-block;
   transition: color 0.2s;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
 .comment-like-btn:hover {
   color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
 }
 
 .comment-form {
