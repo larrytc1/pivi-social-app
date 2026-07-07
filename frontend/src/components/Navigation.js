@@ -3,13 +3,13 @@ import '../styles/Navigation.css';
 
 function Navigation({ activeTab, onTabChange, userEmail, onLogout }) {
   const tabs = [
-    { id: 'pictures', label: 'Pictures', icon: '🖼️' },
-    { id: 'videos', label: 'Videos', icon: '🎬' },
-    { id: 'tags', label: 'Tags', icon: '🏷️' },
-    { id: 'messages', label: 'DMs', icon: '💌' },
-    { id: 'upload', label: 'Upload', icon: '📤' },
-    { id: 'settings', label: 'Settings', icon: '🔧' },
-    { id: 'profile', label: 'Profile', icon: '👥' }
+    { id: 'pictures', label: 'Pictures', icon: 'P' },
+    { id: 'videos', label: 'Videos', icon: 'V' },
+    { id: 'tags', label: 'Tags', icon: 'T' },
+    { id: 'messages', label: 'DMs', icon: 'D' },
+    { id: 'upload', label: 'Upload', icon: 'U' },
+    { id: 'settings', label: 'Settings', icon: 'S' },
+    { id: 'profile', label: 'Profile', icon: 'PR' }
   ];
 
   return (

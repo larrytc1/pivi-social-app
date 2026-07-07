@@ -30,7 +30,7 @@ function PostCard({ post, userId, onLike, onComment, onShare, onDM }) {
             onClick={() => onLike(post.id)}
             title="Like this post"
           >
-            {post.liked ? '❤️' : '🤍'} <span className="stat-count">{post.likes}</span>
+            LIKE <span className="stat-count">{post.likes}</span>
           </span>
         </div>
         <div className="stat">
@@ -39,7 +39,7 @@ function PostCard({ post, userId, onLike, onComment, onShare, onDM }) {
             onClick={onComment}
             title="Comment on this post"
           >
-            💬 <span className="stat-count">{post.comments}</span>
+            COMMENT <span className="stat-count">{post.comments}</span>
           </span>
         </div>
         <div className="stat">
@@ -48,7 +48,7 @@ function PostCard({ post, userId, onLike, onComment, onShare, onDM }) {
             onClick={onShare}
             title="Share this post"
           >
-            📤 <span className="stat-count">{post.shares}</span>
+            SHARE <span className="stat-count">{post.shares}</span>
           </span>
         </div>
         <div className="stat">
@@ -57,7 +57,7 @@ function PostCard({ post, userId, onLike, onComment, onShare, onDM }) {
             onClick={onDM}
             title="Send DM to this user"
           >
-            💌
+            DM
           </span>
         </div>
       </div>

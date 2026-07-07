@@ -6,12 +6,11 @@ function CommentModal({ post, userId, onClose, onAddComment, onPostsUpdate }) {
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([]);
 
-  // Load comments from localStorage
   useEffect(() => {
     const currentPost = getPostById(post.id);
     if (currentPost && currentPost.comments) {
       setComments(currentPost.comments);
-      console.log('📥 COMMENTS_LOADED', { postId: post.id, count: currentPost.comments.length });
+      console.log('COMMENTS_LOADED', { postId: post.id, count: currentPost.comments.length });
     }
   }, [post.id]);
 
@@ -20,14 +19,14 @@ function CommentModal({ post, userId, onClose, onAddComment, onPostsUpdate }) {
     if (commentText.trim()) {
       const newComment = addComment(post.id, {
         author: '@currentuser',
-        avatar: '👤',
+        avatar: 'U',
         text: commentText,
         userId: userId
       });
       
       if (newComment) {
         setComments([...comments, newComment]);
-        console.log('✅ NEW_COMMENT_ADDED_TO_UI', { 
+        console.log('NEW_COMMENT_ADDED_TO_UI', { 
           postId: post.id, 
           commentId: newComment.id,
           text: commentText 
@@ -47,7 +46,7 @@ function CommentModal({ post, userId, onClose, onAddComment, onPostsUpdate }) {
         }
         return c;
       }));
-      console.log('❤️ COMMENT_LIKE_TOGGLED', { commentId, postId: post.id, userId });
+      console.log('COMMENT_LIKE_TOGGLED', { commentId, postId: post.id, userId });
     }
   };
 
@@ -56,7 +55,7 @@ function CommentModal({ post, userId, onClose, onAddComment, onPostsUpdate }) {
       <div className="comment-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Comments on "{post.title}"</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <button className="close-btn" onClick={onClose}>X</button>
         </div>
 
         <div className="comments-list">
@@ -74,7 +73,7 @@ function CommentModal({ post, userId, onClose, onAddComment, onPostsUpdate }) {
                     className="comment-like-btn" 
                     onClick={() => handleCommentLike(comment.id)}
                   >
-                    ❤️ {comment.likes || 0}
+                    LIKE {comment.likes || 0}
                   </span>
                 </div>
               </div>

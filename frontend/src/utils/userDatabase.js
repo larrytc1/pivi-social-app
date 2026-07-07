@@ -1,7 +1,7 @@
 export function getUserByEmail(email) {
   const allUsers = getAllUsers();
   const user = allUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
-  console.log('🔍 USER_LOOKUP', { email, found: !!user });
+  console.log('USER_LOOKUP', { email, found: !!user });
   return user;
 }
 
@@ -9,7 +9,7 @@ export function getAllUsers() {
   try {
     const users = localStorage.getItem('piviUsers');
     const parsedUsers = users ? JSON.parse(users) : [];
-    console.log('📚 GET_ALL_USERS', { count: parsedUsers.length });
+    console.log('GET_ALL_USERS', { count: parsedUsers.length });
     return parsedUsers;
   } catch (error) {
     console.error('ERROR_PARSING_USERS', error);
@@ -25,7 +25,7 @@ export function getUserById(userId) {
 export function createUser(email, password) {
   const existingUser = getUserByEmail(email);
   if (existingUser) {
-    console.log('❌ CREATE_USER_FAILED - EMAIL_ALREADY_EXISTS', { email });
+    console.log('CREATE_USER_FAILED - EMAIL_ALREADY_EXISTS', { email });
     return null;
   }
 
@@ -33,7 +33,7 @@ export function createUser(email, password) {
   const newUser = {
     id: userId,
     email: email.toLowerCase(),
-    password: password, // In production, this should be hashed
+    password: password,
     createdAt: new Date().toISOString(),
     posts: [],
     followers: 0,
@@ -44,7 +44,7 @@ export function createUser(email, password) {
     const allUsers = getAllUsers();
     allUsers.push(newUser);
     localStorage.setItem('piviUsers', JSON.stringify(allUsers));
-    console.log('✅ USER_CREATED', { userId, email });
+    console.log('USER_CREATED', { userId, email });
     return newUser;
   } catch (error) {
     console.error('ERROR_CREATING_USER', error);
@@ -58,13 +58,12 @@ export function updateUser(userId, updates) {
   if (userIndex !== -1) {
     allUsers[userIndex] = { ...allUsers[userIndex], ...updates };
     localStorage.setItem('piviUsers', JSON.stringify(allUsers));
-    console.log('✏️ USER_UPDATED', { userId, ...updates });
+    console.log('USER_UPDATED', { userId, ...updates });
     return allUsers[userIndex];
   }
   return null;
 }
 
-// Posts Database
 export function getAllPosts() {
   try {
     const posts = localStorage.getItem('piviPosts');
@@ -86,7 +85,7 @@ export function updatePost(postId, updates) {
   if (postIndex !== -1) {
     allPosts[postIndex] = { ...allPosts[postIndex], ...updates };
     localStorage.setItem('piviPosts', JSON.stringify(allPosts));
-    console.log('✏️ POST_UPDATED', { postId, ...updates });
+    console.log('POST_UPDATED', { postId, ...updates });
     return allPosts[postIndex];
   }
   return null;
@@ -105,11 +104,10 @@ export function createPost(post) {
   };
   allPosts.push(newPost);
   localStorage.setItem('piviPosts', JSON.stringify(allPosts));
-  console.log('📝 POST_CREATED', newPost);
+  console.log('POST_CREATED', newPost);
   return newPost;
 }
 
-// Comments Database
 export function addComment(postId, comment) {
   const post = getPostById(postId);
   if (post) {
@@ -125,7 +123,7 @@ export function addComment(postId, comment) {
     }
     post.comments.push(newComment);
     updatePost(postId, { comments: post.comments });
-    console.log('💬 COMMENT_ADDED_TO_DB', { postId, commentId: newComment.id });
+    console.log('COMMENT_ADDED_TO_DB', { postId, commentId: newComment.id });
     return newComment;
   }
   return null;
@@ -148,14 +146,13 @@ export function likeComment(postId, commentId, userId) {
         comment.likes = Math.max(0, (comment.likes || 1) - 1);
       }
       updatePost(postId, { comments: post.comments });
-      console.log('❤️ COMMENT_LIKED_IN_DB', { postId, commentId, userId });
+      console.log('COMMENT_LIKED_IN_DB', { postId, commentId, userId });
       return comment;
     }
   }
   return null;
 }
 
-// Likes Database
 export function toggleLike(postId, userId) {
   const post = getPostById(postId);
   if (post) {
@@ -171,13 +168,12 @@ export function toggleLike(postId, userId) {
       post.likes = Math.max(0, (post.likes || 1) - 1);
     }
     updatePost(postId, { likes: post.likes, likedBy: post.likedBy });
-    console.log('❤️ LIKE_TOGGLED_IN_DB', { postId, userId, totalLikes: post.likes, liked: userLikedIndex === -1 });
+    console.log('LIKE_TOGGLED_IN_DB', { postId, userId, totalLikes: post.likes, liked: userLikedIndex === -1 });
     return post;
   }
   return null;
 }
 
-// Initialize default posts if none exist
 export function initializeDefaultPosts() {
   const existingPosts = getAllPosts();
   if (existingPosts.length === 0) {
@@ -187,7 +183,7 @@ export function initializeDefaultPosts() {
         userId: 'user_demo',
         author: '@samwilson',
         username: 'samwilson',
-        avatar: '👨‍🎨',
+        avatar: 'SW',
         title: 'City lights at night',
         description: 'Downtown never sleeps',
         image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop',
@@ -204,7 +200,7 @@ export function initializeDefaultPosts() {
         userId: 'user_demo2',
         author: '@wanderlust',
         username: 'wanderlust',
-        avatar: '🌍',
+        avatar: 'WL',
         title: 'Mountain View',
         description: 'Breathtaking mountain scenery at sunset.',
         image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
@@ -221,7 +217,7 @@ export function initializeDefaultPosts() {
         userId: 'user_demo3',
         author: '@oceanvibes',
         username: 'oceanvibes',
-        avatar: '🌊',
+        avatar: 'OV',
         title: 'Beach Sunset',
         description: 'Golden hour at the beach',
         image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop',
@@ -235,6 +231,6 @@ export function initializeDefaultPosts() {
       }
     ];
     localStorage.setItem('piviPosts', JSON.stringify(defaultPosts));
-    console.log('📚 DEFAULT_POSTS_INITIALIZED', { count: defaultPosts.length });
+    console.log('DEFAULT_POSTS_INITIALIZED', { count: defaultPosts.length });
   }
 }

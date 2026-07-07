@@ -7,7 +7,7 @@ function Videos({ userId, userEmail }) {
       id: 1,
       title: 'Summer Vibes',
       author: '@traveler_john',
-      avatar: '🎥',
+      avatar: 'V1',
       thumbnail: 'https://images.unsplash.com/photo-1611339555312-e607c04352fa?w=600&h=400&fit=crop',
       views: 1234,
       likes: 89,
@@ -17,7 +17,7 @@ function Videos({ userId, userEmail }) {
       id: 2,
       title: 'Nature Documentary',
       author: '@nature_lover',
-      avatar: '🌿',
+      avatar: 'V2',
       thumbnail: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=600&h=400&fit=crop',
       views: 5678,
       likes: 234,
@@ -39,8 +39,8 @@ function Videos({ userId, userEmail }) {
               <h3>{video.title}</h3>
               <p className="video-author">{video.author}</p>
               <div className="video-stats">
-                <span>👁️ {video.views} views</span>
-                <span>❤️ {video.likes}</span>
+                <span>VIEWS: {video.views}</span>
+                <span>LIKES: {video.likes}</span>
               </div>
             </div>
           </div>

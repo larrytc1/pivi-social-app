@@ -9,7 +9,7 @@ function Upload({ userId, userEmail }) {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    console.log('📁 FILE_SELECTED', { fileName: e.target.files[0]?.name, type: uploadType });
+    console.log('FILE_SELECTED', { fileName: e.target.files[0]?.name, type: uploadType });
   };
 
   const handleUpload = (e) => {
@@ -18,8 +18,8 @@ function Upload({ userId, userEmail }) {
       alert('Please select a file and add a title');
       return;
     }
-    console.log('📤 UPLOAD_INITIATED', { title, description, userId, type: uploadType });
-    alert(`Uploading ${uploadType}: ${title}`);
+    console.log('UPLOAD_INITIATED', { title, description, userId, type: uploadType });
+    alert('Uploading ' + uploadType + ': ' + title);
     setTitle('');
     setDescription('');
     setFile(null);
@@ -79,7 +79,7 @@ function Upload({ userId, userEmail }) {
             id="file-input"
           />
           <label htmlFor="file-input" className="file-label">
-            {file ? `✅ ${file.name}` : `Click to select ${uploadType}...`}
+            {file ? file.name : 'Click to select ' + uploadType + '...'}
           </label>
         </div>
 

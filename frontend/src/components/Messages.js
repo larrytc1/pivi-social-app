@@ -6,7 +6,7 @@ function Messages({ userId, userEmail }) {
     {
       id: 1,
       username: '@samwilson',
-      avatar: '🎨',
+      avatar: 'SW',
       lastMessage: 'Great shot! How did you capture that?',
       timestamp: '2 min ago',
       unread: true
@@ -14,7 +14,7 @@ function Messages({ userId, userEmail }) {
     {
       id: 2,
       username: '@wanderlust',
-      avatar: '🌍',
+      avatar: 'WL',
       lastMessage: 'Thanks for the follow!',
       timestamp: '1 hour ago',
       unread: false
