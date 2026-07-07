@@ -1,61 +1,26 @@
-.conversations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.conversation-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
+.messages-card {
   background: white;
+  padding: 24px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-left: 3px solid transparent;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
-.conversation-item:hover {
-  background: #f9f9ff;
-  transform: translateX(4px);
-}
-
-.conversation-item.unread {
-  background: #f0e8ff;
-  border-left-color: #667eea;
-  font-weight: 600;
-}
-
-.conv-avatar {
-  font-size: 32px;
-  line-height: 1;
-}
-
-.conv-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.conv-username {
-  display: block;
-  font-size: 14px;
+.messages-card h2 {
+  margin-top: 0;
   color: #1a1a2e;
-  font-weight: 600;
-  margin-bottom: 4px;
 }
 
-.conv-message {
-  margin: 0;
-  font-size: 12px;
-  color: #999;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.messages-card p {
+  margin: 12px 0;
+  color: #666;
+  font-size: 14px;
 }
 
-.conv-time {
-  font-size: 12px;
+.messages-hint {
   color: #999;
-  flex-shrink: 0;
+  font-size: 12px;
+  font-style: italic;
 }

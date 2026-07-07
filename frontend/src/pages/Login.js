@@ -8,7 +8,6 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -37,8 +36,6 @@ function Login({ onLogin }) {
 
     // Check if user exists
     const user = getUserByEmail(email);
-    console.log('🔍 LOGIN_USER_LOOKUP', { email, userFound: !!user });
-    
     if (!user) {
       console.log('❌ LOGIN_FAILED - EMAIL_NOT_FOUND', { email });
       setError('Email not found. Please sign up first.');
@@ -48,17 +45,16 @@ function Login({ onLogin }) {
 
     // Check password
     if (user.password !== password) {
-      console.log('❌ LOGIN_FAILED - INVALID_PASSWORD', { email, attemptedPassword: password });
+      console.log('❌ LOGIN_FAILED - INVALID_PASSWORD', { email });
       setError('Incorrect password. Please try again.');
       setLoading(false);
       return;
     }
 
-    console.log('🔐 LOGIN_ATTEMPT', { email, userId: user.id });
+    console.log('🔑 LOGIN_ATTEMPT', { email });
     const success = onLogin(email, password);
     
     if (success) {
-      console.log('✅ LOGIN_SUCCESSFUL', { email, userId: user.id });
       setLoading(false);
       navigate('/');
     } else {
@@ -88,24 +84,15 @@ function Login({ onLogin }) {
 
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <div className="password-input-container">
-              <input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-input password-input"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
+            <input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+              disabled={loading}
+            />
           </div>
 
           {error && <div className="error-message">{error}</div>}
