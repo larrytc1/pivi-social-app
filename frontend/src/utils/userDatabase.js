@@ -1,16 +1,55 @@
 export function getUserByEmail(email) {
   const allUsers = getAllUsers();
-  return allUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
+  const user = allUsers.find(user => user.email.toLowerCase() === email.toLowerCase());
+  console.log('🔍 USER_LOOKUP', { email, found: !!user });
+  return user;
 }
 
 export function getAllUsers() {
-  const users = localStorage.getItem('piviUsers');
-  return users ? JSON.parse(users) : [];
+  try {
+    const users = localStorage.getItem('piviUsers');
+    const parsedUsers = users ? JSON.parse(users) : [];
+    console.log('📚 GET_ALL_USERS', { count: parsedUsers.length });
+    return parsedUsers;
+  } catch (error) {
+    console.error('ERROR_PARSING_USERS', error);
+    return [];
+  }
 }
 
 export function getUserById(userId) {
   const allUsers = getAllUsers();
   return allUsers.find(user => user.id === userId);
+}
+
+export function createUser(email, password) {
+  const existingUser = getUserByEmail(email);
+  if (existingUser) {
+    console.log('❌ CREATE_USER_FAILED - EMAIL_ALREADY_EXISTS', { email });
+    return null;
+  }
+
+  const userId = 'user_' + Date.now();
+  const newUser = {
+    id: userId,
+    email: email.toLowerCase(),
+    password: password, // In production, this should be hashed
+    createdAt: new Date().toISOString(),
+    posts: [],
+    followers: 0,
+    following: 0
+  };
+
+  try {
+    const allUsers = getAllUsers();
+    allUsers.push(newUser);
+    localStorage.setItem('piviUsers', JSON.stringify(allUsers));
+    console.log('✅ USER_CREATED', { userId, email });
+    return newUser;
+  } catch (error) {
+    console.error('ERROR_CREATING_USER', error);
+    return null;
+  }
 }
 
 export function updateUser(userId, updates) {
@@ -27,8 +66,13 @@ export function updateUser(userId, updates) {
 
 // Posts Database
 export function getAllPosts() {
-  const posts = localStorage.getItem('piviPosts');
-  return posts ? JSON.parse(posts) : [];
+  try {
+    const posts = localStorage.getItem('piviPosts');
+    return posts ? JSON.parse(posts) : [];
+  } catch (error) {
+    console.error('ERROR_PARSING_POSTS', error);
+    return [];
+  }
 }
 
 export function getPostById(postId) {

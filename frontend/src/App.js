@@ -7,7 +7,7 @@ import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import Messages from './pages/Messages';
 import Upload from './pages/Upload';
-import { getUserByEmail, getAllUsers } from './utils/userDatabase';
+import { getUserByEmail, createUser } from './utils/userDatabase';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,11 +18,16 @@ function App() {
   useEffect(() => {
     const savedUser = localStorage.getItem('piviCurrentUser');
     if (savedUser) {
-      const user = JSON.parse(savedUser);
-      setUserId(user.id);
-      setUserEmail(user.email);
-      setIsLoggedIn(true);
-      console.log('🔑 USER_RESTORED_FROM_STORAGE', user);
+      try {
+        const user = JSON.parse(savedUser);
+        setUserId(user.id);
+        setUserEmail(user.email);
+        setIsLoggedIn(true);
+        console.log('🔑 USER_RESTORED_FROM_STORAGE', user);
+      } catch (error) {
+        console.error('ERROR_RESTORING_USER', error);
+        localStorage.removeItem('piviCurrentUser');
+      }
     }
   }, []);
 
@@ -54,26 +59,17 @@ function App() {
       return false;
     }
 
-    const userId = 'user_' + Date.now();
-    const newUser = { 
-      id: userId, 
-      email, 
-      password,
-      createdAt: new Date().toISOString(),
-      posts: [],
-      followers: 0,
-      following: 0
-    };
-    
-    // Store in localStorage
-    const allUsers = getAllUsers();
-    allUsers.push(newUser);
-    localStorage.setItem('piviUsers', JSON.stringify(allUsers));
-    
-    setUserId(userId);
-    setUserEmail(email);
+    // Create new user
+    const newUser = createUser(email, password);
+    if (!newUser) {
+      console.log('❌ SIGNUP_FAILED - ERROR_CREATING_USER', { email });
+      return false;
+    }
+
+    setUserId(newUser.id);
+    setUserEmail(newUser.email);
     setIsLoggedIn(true);
-    localStorage.setItem('piviCurrentUser', JSON.stringify({ id: userId, email }));
+    localStorage.setItem('piviCurrentUser', JSON.stringify({ id: newUser.id, email: newUser.email }));
     console.log('🎉 SIGNUP_SUCCESS', newUser);
     return true;
   };
