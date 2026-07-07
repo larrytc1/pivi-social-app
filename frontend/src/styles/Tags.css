@@ -1,3 +1,277 @@
-.tags-content {
+/* Tags feed layout */
+.tags-feed-content {
   width: 100%;
+}
+
+.tags-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Individual tag card */
+.tag-feed-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.tag-feed-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Card header */
+.tag-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tag-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tag-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tag-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tag-username {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.tag-label {
+  font-size: 12px;
+  color: #888;
+}
+
+/* Type badge */
+.tag-type-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.tag-type-picture {
+  background: #e8f4fd;
+  color: #1a73e8;
+}
+
+.tag-type-video {
+  background: #fde8e8;
+  color: #d93025;
+}
+
+/* Thumbnail */
+.tag-thumbnail {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.tag-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Video play overlay */
+.tag-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* CSS triangle play button - no emoji */
+.tag-play-btn {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 22px 0 22px 38px;
+  border-color: transparent transparent transparent white;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+
+.tag-duration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Content section */
+.tag-card-content {
+  padding: 14px 16px 10px;
+}
+
+.tag-title {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.tag-description {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.tag-time {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Action buttons row */
+.tag-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid #f5f5f5;
+  flex-wrap: wrap;
+}
+
+.tag-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+  user-select: none;
+}
+
+.tag-action-btn:active {
+  transform: scale(0.96);
+}
+
+.tag-action-btn.like-btn {
+  background: #f5f5f5;
+  color: #555;
+}
+
+.tag-action-btn.like-btn:hover {
+  background: #ffe0e0;
+  color: #d93025;
+}
+
+.tag-action-btn.like-btn.liked {
+  background: #fde8e8;
+  color: #d93025;
+}
+
+.tag-action-btn.comment-btn {
+  background: #f5f5f5;
+  color: #555;
+}
+
+.tag-action-btn.comment-btn:hover {
+  background: #e8f4fd;
+  color: #1a73e8;
+}
+
+.tag-action-btn.share-btn {
+  background: #f5f5f5;
+  color: #555;
+}
+
+.tag-action-btn.share-btn:hover {
+  background: #e8fdf0;
+  color: #1a7340;
+}
+
+.tag-action-btn.dm-btn {
+  background: #f5f5f5;
+  color: #555;
+  margin-left: auto;
+}
+
+.tag-action-btn.dm-btn:hover {
+  background: #f0e8fd;
+  color: #764ba2;
+}
+
+.action-count {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Empty state */
+.no-tags {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 15px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tags-feed {
+    gap: 16px;
+  }
+
+  .tag-actions {
+    gap: 4px;
+  }
+
+  .tag-action-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .tag-action-btn.dm-btn {
+    margin-left: 0;
+  }
 }
