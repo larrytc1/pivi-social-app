@@ -4,6 +4,12 @@ import Navigation from '../components/Navigation';
 import PostCard from '../components/PostCard';
 import CommentModal from '../components/CommentModal';
 import ShareModal from '../components/ShareModal';
+import Videos from '../components/Videos';
+import Tags from '../components/Tags';
+import Messages from '../components/Messages';
+import Upload from '../components/Upload';
+import Settings from '../components/Settings';
+import Profile from '../components/Profile';
 import { getAllPosts, toggleLike, initializeDefaultPosts } from '../utils/userDatabase';
 import '../styles/Feed.css';
 
@@ -37,7 +43,6 @@ function Feed({ userId, userEmail, onLogout }) {
   const handleLike = (postId) => {
     const updatedPost = toggleLike(postId, userId);
     if (updatedPost) {
-      // Update local state
       setPosts(posts.map(post => {
         if (post.id === postId) {
           return updatedPost;
@@ -71,7 +76,6 @@ function Feed({ userId, userEmail, onLogout }) {
 
   const handleAddComment = (commentText) => {
     if (selectedPost) {
-      // Update the post with new comment
       const updatedPosts = posts.map(post => {
         if (post.id === selectedPost.id) {
           return {
@@ -131,36 +135,45 @@ function Feed({ userId, userEmail, onLogout }) {
         onLogout={handleLogout}
       />
 
-      <div className="feed-content">
-        <div className="search-bar-container">
-          <span className="search-icon">🔍</span>
-          <input 
-            type="text" 
-            placeholder="Search pictures..." 
-            className="search-input"
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-        </div>
+      {activeTab === 'pictures' && (
+        <div className="feed-content">
+          <div className="search-bar-container">
+            <span className="search-icon">🔍</span>
+            <input 
+              type="text" 
+              placeholder="Search pictures..." 
+              className="search-input"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
 
-        <div className="posts-container">
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map(post => (
-              <PostCard 
-                key={post.id}
-                post={post}
-                userId={userId}
-                onLike={handleLike}
-                onComment={() => handleCommentClick(post)}
-                onShare={() => handleShareClick(post)}
-                onDM={() => handleDMClick(post)}
-              />
-            ))
-          ) : (
-            <div className="no-posts">No pictures found. Try a different search.</div>
-          )}
+          <div className="posts-container">
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map(post => (
+                <PostCard 
+                  key={post.id}
+                  post={post}
+                  userId={userId}
+                  onLike={handleLike}
+                  onComment={() => handleCommentClick(post)}
+                  onShare={() => handleShareClick(post)}
+                  onDM={() => handleDMClick(post)}
+                />
+              ))
+            ) : (
+              <div className="no-posts">No pictures found. Try a different search.</div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'videos' && <Videos userId={userId} userEmail={userEmail} />}
+      {activeTab === 'tags' && <Tags userId={userId} userEmail={userEmail} />}
+      {activeTab === 'messages' && <Messages userId={userId} userEmail={userEmail} />}
+      {activeTab === 'upload' && <Upload userId={userId} userEmail={userEmail} />}
+      {activeTab === 'settings' && <Settings userId={userId} userEmail={userEmail} onLogout={handleLogout} />}
+      {activeTab === 'profile' && <Profile userId={userId} userEmail={userEmail} onLogout={handleLogout} />}
 
       {showCommentModal && selectedPost && (
         <CommentModal
