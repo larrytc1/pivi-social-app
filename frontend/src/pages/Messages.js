@@ -1,20 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Navigation from '../components/Navigation';
+import '../styles/Messages.css';
 
-function Messages() {
+function Messages({ userEmail, onLogout }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
   return (
-    <div className="App-content">
-      <h2>Messages 💬</h2>
-      <p>Connect with your friends in real-time</p>
-      
-      <div className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/profile">Profile</Link>
-        <Link to="/messages">Messages</Link>
-      </div>
-      
-      <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '10px' }}>
-        <p>You have no new messages</p>
+    <div className="feed-container">
+      <Navigation 
+        activeTab="messages" 
+        onTabChange={() => {}}
+        userEmail={userEmail}
+        onLogout={handleLogout}
+      />
+      <div className="feed-content">
+        <div className="messages-card">
+          <h2>Direct Messages</h2>
+          <p>You have no messages</p>
+        </div>
       </div>
     </div>
   );
