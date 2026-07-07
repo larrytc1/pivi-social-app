@@ -1,3 +1,178 @@
+/* ===== Videos Feed ===== */
+.videos-feed-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.videos-feed-content {
+  flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px;
+}
+
+.video-search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 18px;
+  color: #999;
+  pointer-events: none;
+}
+
+.video-posts-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* ===== Video Post Card ===== */
+.video-post-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.video-post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Card Header ===== */
+.video-post-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.video-avatar-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+/* ===== Thumbnail with Play Overlay ===== */
+.video-thumbnail-wrap {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+}
+
+.video-thumb-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.video-thumbnail-wrap:hover .video-thumb-img {
+  opacity: 0.85;
+}
+
+.video-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.video-thumbnail-wrap:hover .video-play-overlay {
+  background: rgba(102, 126, 234, 0.85);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* CSS triangle play button — no emoji */
+.video-play-triangle {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 11px 0 11px 20px;
+  border-color: transparent transparent transparent #ffffff;
+  margin-left: 4px;
+}
+
+.video-duration-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ===== Views button (non-interactive display) ===== */
+.views-btn {
+  cursor: default;
+  color: #888 !important;
+}
+
+.views-btn:hover {
+  transform: none !important;
+  background: transparent !important;
+  color: #888 !important;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .videos-feed-content {
+    padding: 12px;
+  }
+
+  .video-posts-container {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-post-card {
+    border-radius: 0;
+  }
+
+  .video-play-overlay {
+    width: 48px;
+    height: 48px;
+  }
+
+  .video-play-triangle {
+    border-width: 9px 0 9px 16px;
+    margin-left: 3px;
+  }
+}
+
+/* ===== Legacy grid styles kept for compatibility ===== */
 .tab-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -9,79 +184,6 @@
   color: #1a1a2e;
   margin-bottom: 30px;
   font-size: 28px;
-}
-
-/* Videos */
-.videos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.video-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.video-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.video-thumbnail {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  overflow: hidden;
-  background: #f0f0f0;
-}
-
-.video-thumbnail img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.video-duration {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.video-info {
-  padding: 12px;
-}
-
-.video-info h3 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  color: #1a1a2e;
-}
-
-.video-author {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: #999;
-}
-
-.video-stats {
-  display: flex;
-  gap: 12px;
-  font-size: 12px;
-  color: #666;
 }
 
 /* Tags */
@@ -122,10 +224,6 @@
 @media (max-width: 768px) {
   .tab-content {
     padding: 20px 12px;
-  }
-
-  .videos-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 
   .tags-grid {
