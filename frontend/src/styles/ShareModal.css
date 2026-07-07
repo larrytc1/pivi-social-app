@@ -1,0 +1,62 @@
+.share-modal {
+  background: white;
+  border-radius: 12px 12px 0 0;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.15);
+}
+
+.share-options {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.share-option:hover {
+  border-color: #667eea;
+  background: #f9f9ff;
+}
+
+.share-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.share-text {
+  flex: 1;
+  text-align: left;
+}
+
+.share-text h3 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.share-text p {
+  margin: 0;
+  font-size: 12px;
+  color: #999;
+}
+
+@media (max-width: 480px) {
+  .share-modal {
+    width: 100%;
+  }
+}
