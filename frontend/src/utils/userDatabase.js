@@ -76,7 +76,9 @@ export function getAllPosts() {
 
 export function getPostById(postId) {
   const allPosts = getAllPosts();
-  return allPosts.find(post => post.id === postId);
+  const post = allPosts.find(p => p.id === postId);
+  if (post) return post;
+  return getTaggedPostById(postId);
 }
 
 export function updatePost(postId, updates) {
@@ -109,6 +111,7 @@ export function createPost(post) {
 }
 
 export function addComment(postId, comment) {
+  const inRegular = !!getAllPosts().find(p => p.id === postId);
   const post = getPostById(postId);
   if (post) {
     const newComment = {
@@ -122,7 +125,11 @@ export function addComment(postId, comment) {
       post.comments = [];
     }
     post.comments.push(newComment);
-    updatePost(postId, { comments: post.comments });
+    if (inRegular) {
+      updatePost(postId, { comments: post.comments });
+    } else {
+      updateTaggedPost(postId, { comments: post.comments });
+    }
     console.log('COMMENT_ADDED_TO_DB', { postId, commentId: newComment.id });
     return newComment;
   }
@@ -130,6 +137,7 @@ export function addComment(postId, comment) {
 }
 
 export function likeComment(postId, commentId, userId) {
+  const inRegular = !!getAllPosts().find(p => p.id === postId);
   const post = getPostById(postId);
   if (post && post.comments) {
     const comment = post.comments.find(c => c.id === commentId);
@@ -145,7 +153,11 @@ export function likeComment(postId, commentId, userId) {
         comment.likedBy.splice(userLikedIndex, 1);
         comment.likes = Math.max(0, (comment.likes || 1) - 1);
       }
-      updatePost(postId, { comments: post.comments });
+      if (inRegular) {
+        updatePost(postId, { comments: post.comments });
+      } else {
+        updateTaggedPost(postId, { comments: post.comments });
+      }
       console.log('COMMENT_LIKED_IN_DB', { postId, commentId, userId });
       return comment;
     }
@@ -232,5 +244,135 @@ export function initializeDefaultPosts() {
     ];
     localStorage.setItem('piviPosts', JSON.stringify(defaultPosts));
     console.log('DEFAULT_POSTS_INITIALIZED', { count: defaultPosts.length });
+  }
+}
+
+export function getTaggedPosts() {
+  try {
+    const posts = localStorage.getItem('piviTaggedPosts');
+    return posts ? JSON.parse(posts) : [];
+  } catch (error) {
+    console.error('ERROR_PARSING_TAGGED_POSTS', error);
+    return [];
+  }
+}
+
+export function getTaggedPostById(postId) {
+  const allPosts = getTaggedPosts();
+  return allPosts.find(post => post.id === postId) || null;
+}
+
+export function updateTaggedPost(postId, updates) {
+  const allPosts = getTaggedPosts();
+  const postIndex = allPosts.findIndex(post => post.id === postId);
+  if (postIndex !== -1) {
+    allPosts[postIndex] = { ...allPosts[postIndex], ...updates };
+    localStorage.setItem('piviTaggedPosts', JSON.stringify(allPosts));
+    console.log('TAGGED_POST_UPDATED', { postId });
+    return allPosts[postIndex];
+  }
+  return null;
+}
+
+export function toggleTagLike(postId, userId) {
+  const post = getTaggedPostById(postId);
+  if (post) {
+    if (!post.likedBy) {
+      post.likedBy = [];
+    }
+    const idx = post.likedBy.indexOf(userId);
+    if (idx === -1) {
+      post.likedBy.push(userId);
+      post.likes = (post.likes || 0) + 1;
+    } else {
+      post.likedBy.splice(idx, 1);
+      post.likes = Math.max(0, (post.likes || 1) - 1);
+    }
+    updateTaggedPost(postId, { likes: post.likes, likedBy: post.likedBy });
+    console.log('TAG_LIKE_TOGGLED_IN_DB', { postId, userId, totalLikes: post.likes, liked: idx === -1 });
+    return post;
+  }
+  return null;
+}
+
+export function initializeDefaultTaggedPosts() {
+  const existing = getTaggedPosts();
+  if (existing.length === 0) {
+    const defaultTagged = [
+      {
+        id: 'tag_1',
+        type: 'picture',
+        taggerUsername: '@alex_travels',
+        taggerAvatar: 'AT',
+        title: 'Group photo at the summit',
+        description: 'Made it to the top! This view was worth every step.',
+        thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop',
+        likes: 24,
+        comments: [],
+        shares: 3,
+        likedBy: [],
+        taggedAt: '2 hours ago'
+      },
+      {
+        id: 'tag_2',
+        type: 'video',
+        taggerUsername: '@mike_surf',
+        taggerAvatar: 'MS',
+        title: 'Surf session highlights',
+        description: 'Check out these awesome waves we caught this morning!',
+        thumbnail: 'https://images.unsplash.com/photo-1531722569936-825d4eebb6f1?w=600&h=400&fit=crop',
+        duration: '1:45',
+        likes: 18,
+        comments: [],
+        shares: 7,
+        likedBy: [],
+        taggedAt: '5 hours ago'
+      },
+      {
+        id: 'tag_3',
+        type: 'picture',
+        taggerUsername: '@sarah_art',
+        taggerAvatar: 'SA',
+        title: 'Art show opening night',
+        description: 'So glad you were there with us for this special evening!',
+        thumbnail: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=400&fit=crop',
+        likes: 31,
+        comments: [],
+        shares: 5,
+        likedBy: [],
+        taggedAt: '1 day ago'
+      },
+      {
+        id: 'tag_4',
+        type: 'video',
+        taggerUsername: '@dave_music',
+        taggerAvatar: 'DM',
+        title: 'Live performance clip',
+        description: 'That moment we were all on stage together!',
+        thumbnail: 'https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&h=400&fit=crop',
+        duration: '3:12',
+        likes: 42,
+        comments: [],
+        shares: 11,
+        likedBy: [],
+        taggedAt: '2 days ago'
+      },
+      {
+        id: 'tag_5',
+        type: 'picture',
+        taggerUsername: '@jen_food',
+        taggerAvatar: 'JF',
+        title: 'Brunch squad goals',
+        description: 'Best brunch in the city, glad we finally made it here!',
+        thumbnail: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop',
+        likes: 15,
+        comments: [],
+        shares: 2,
+        likedBy: [],
+        taggedAt: '3 days ago'
+      }
+    ];
+    localStorage.setItem('piviTaggedPosts', JSON.stringify(defaultTagged));
+    console.log('DEFAULT_TAGGED_POSTS_INITIALIZED', { count: defaultTagged.length });
   }
 }
