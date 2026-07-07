@@ -176,7 +176,8 @@ export function toggleLike(postId, userId) {
 
 export function initializeDefaultPosts() {
   const existingPosts = getAllPosts();
-  if (existingPosts.length === 0) {
+  const hasPictures = existingPosts.some(p => !p.type || p.type === 'picture');
+  if (!hasPictures) {
     const defaultPosts = [
       {
         id: 1,
@@ -230,7 +231,128 @@ export function initializeDefaultPosts() {
         createdAt: new Date().toISOString()
       }
     ];
-    localStorage.setItem('piviPosts', JSON.stringify(defaultPosts));
+    const allPosts = getAllPosts();
+    const merged = [...allPosts, ...defaultPosts];
+    localStorage.setItem('piviPosts', JSON.stringify(merged));
     console.log('DEFAULT_POSTS_INITIALIZED', { count: defaultPosts.length });
   }
+}
+
+export function initializeDefaultVideos() {
+  const existingPosts = getAllPosts();
+  const hasVideos = existingPosts.some(p => p.type === 'video');
+  if (!hasVideos) {
+    const defaultVideos = [
+      {
+        id: 'video_1',
+        userId: 'user_demo',
+        author: '@traveler_john',
+        username: 'traveler_john',
+        avatar: 'TJ',
+        title: 'Summer Vibes',
+        description: 'Exploring the best beaches this summer. Nothing beats the ocean breeze and warm sunshine.',
+        thumbnail: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop',
+        duration: '2:34',
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        shares: 0,
+        views: 0,
+        uploadedAt: '3 hours ago',
+        type: 'video',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'video_2',
+        userId: 'user_demo2',
+        author: '@nature_lover',
+        username: 'nature_lover',
+        avatar: 'NL',
+        title: 'Into the Wild',
+        description: 'A peaceful hike through ancient forests. The sounds of nature are the best therapy.',
+        thumbnail: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop',
+        duration: '5:12',
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        shares: 0,
+        views: 0,
+        uploadedAt: '1 hour ago',
+        type: 'video',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'video_3',
+        userId: 'user_demo3',
+        author: '@citylife',
+        username: 'citylife',
+        avatar: 'CL',
+        title: 'City at Night',
+        description: 'The city never sleeps. A stunning time-lapse of downtown lights and late-night energy.',
+        thumbnail: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&h=400&fit=crop',
+        duration: '1:48',
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        shares: 0,
+        views: 0,
+        uploadedAt: '30 minutes ago',
+        type: 'video',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'video_4',
+        userId: 'user_demo4',
+        author: '@foodie_chef',
+        username: 'foodie_chef',
+        avatar: 'FC',
+        title: 'Quick Pasta Recipe',
+        description: 'My secret pasta recipe ready in under 15 minutes. Simple ingredients, incredible flavour.',
+        thumbnail: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&h=400&fit=crop',
+        duration: '3:22',
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        shares: 0,
+        views: 0,
+        uploadedAt: '5 hours ago',
+        type: 'video',
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: 'video_5',
+        userId: 'user_demo5',
+        author: '@adventure_seeker',
+        username: 'adventure_seeker',
+        avatar: 'AS',
+        title: 'Mountain Trail Run',
+        description: 'Running at 3000m altitude. Challenging but the views from the top make every step worth it.',
+        thumbnail: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop',
+        duration: '4:05',
+        likes: 0,
+        likedBy: [],
+        comments: [],
+        shares: 0,
+        views: 0,
+        uploadedAt: '2 hours ago',
+        type: 'video',
+        createdAt: new Date().toISOString()
+      }
+    ];
+    const allPosts = getAllPosts();
+    const merged = [...allPosts, ...defaultVideos];
+    localStorage.setItem('piviPosts', JSON.stringify(merged));
+    console.log('DEFAULT_VIDEOS_INITIALIZED', { count: defaultVideos.length });
+  }
+}
+
+export function incrementVideoViews(videoId) {
+  const post = getPostById(videoId);
+  if (post && post.type === 'video') {
+    const newViews = (post.views || 0) + 1;
+    updatePost(videoId, { views: newViews });
+    console.log('VIDEO_VIEWS_INCREMENTED', { videoId, views: newViews });
+    return newViews;
+  }
+  return null;
 }

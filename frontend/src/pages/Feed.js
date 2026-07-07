@@ -10,7 +10,7 @@ import Messages from '../components/Messages';
 import Upload from '../components/Upload';
 import Settings from '../components/Settings';
 import Profile from '../components/Profile';
-import { getAllPosts, toggleLike, initializeDefaultPosts } from '../utils/userDatabase';
+import { getAllPosts, toggleLike, initializeDefaultPosts, initializeDefaultVideos } from '../utils/userDatabase';
 import '../styles/Feed.css';
 
 function Feed({ userId, userEmail, onLogout }) {
@@ -25,7 +25,8 @@ function Feed({ userId, userEmail, onLogout }) {
   // Initialize posts from localStorage on mount
   useEffect(() => {
     initializeDefaultPosts();
-    const loadedPosts = getAllPosts();
+    initializeDefaultVideos();
+    const loadedPosts = getAllPosts().filter(p => !p.type || p.type === 'picture');
     setPosts(loadedPosts);
     console.log('📥 POSTS_LOADED_FROM_STORAGE', { count: loadedPosts.length });
   }, []);
@@ -117,13 +118,12 @@ function Feed({ userId, userEmail, onLogout }) {
     console.log('🔍 SEARCH_QUERY', { query, userId, timestamp: new Date().toISOString() });
   };
 
-  // Filter posts based on search and tab
+  // Filter posts based on search (Pictures tab only shows picture-type posts)
   const filteredPosts = posts.filter(post => {
-    const matchesTab = activeTab === 'pictures' || post.type === activeTab;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          post.author.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
+    return matchesSearch;
   });
 
   return (
