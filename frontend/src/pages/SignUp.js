@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getUserByEmail } from '../utils/userDatabase';
 import '../styles/Auth.css';
 
 function SignUp({ onSignUp }) {
@@ -11,7 +10,7 @@ function SignUp({ onSignUp }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -41,23 +40,14 @@ function SignUp({ onSignUp }) {
       return;
     }
 
-    // Check if email already exists
-    const existingUser = getUserByEmail(email);
-    if (existingUser) {
-      console.log('❌ SIGNUP_FAILED - EMAIL_ALREADY_EXISTS', { email });
-      setError('This email is already registered. Please sign in instead.');
-      setLoading(false);
-      return;
-    }
-
     console.log('📝 SIGNUP_ATTEMPT', { email, passwordLength: password.length });
-    const success = onSignUp(email, password);
+    const result = await onSignUp(email, password);
     
-    if (success) {
+    if (result.success) {
       setLoading(false);
       navigate('/');
     } else {
-      setError('Sign up failed. Please try again.');
+      setError(result.error || 'Sign up failed. Please try again.');
       setLoading(false);
     }
   };

@@ -7,7 +7,14 @@ import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import Messages from './pages/Messages';
 import Upload from './pages/Upload';
-import { getUserByEmail, getAllUsers } from './utils/userDatabase';
+import {
+  getUserByEmail,
+  getAllUsers,
+  hashPassword,
+  migrateLegacyUserPassword,
+  saveAllUsers,
+  verifyUserPassword
+} from './utils/userDatabase';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,16 +33,21 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (email, password) => {
+  const handleLogin = async (email, password) => {
     const user = getUserByEmail(email);
     if (!user) {
       console.log('❌ LOGIN_FAILED - USER_NOT_FOUND', { email });
-      return false;
+      return { success: false, error: 'Email not found. Please sign up first.' };
     }
     
-    if (user.password !== password) {
+    const passwordMatches = await verifyUserPassword(user, password);
+    if (!passwordMatches) {
       console.log('❌ LOGIN_FAILED - WRONG_PASSWORD', { email });
-      return false;
+      return { success: false, error: 'Incorrect password. Please try again.' };
+    }
+
+    if (user.password && !user.passwordHash) {
+      await migrateLegacyUserPassword(user.id, password);
     }
 
     setUserId(user.id);
@@ -43,22 +55,22 @@ function App() {
     setIsLoggedIn(true);
     localStorage.setItem('piviCurrentUser', JSON.stringify({ id: user.id, email: user.email }));
     console.log('✅ LOGIN_SUCCESS', { userId: user.id, email });
-    return true;
+    return { success: true };
   };
 
-  const handleSignUp = (email, password) => {
+  const handleSignUp = async (email, password) => {
     // Check if email already exists
     const existingUser = getUserByEmail(email);
     if (existingUser) {
       console.log('❌ SIGNUP_FAILED - EMAIL_ALREADY_EXISTS', { email });
-      return false;
+      return { success: false, error: 'This email is already registered. Please sign in instead.' };
     }
 
     const userId = 'user_' + Date.now();
     const newUser = { 
       id: userId, 
       email, 
-      password,
+      passwordHash: await hashPassword(password),
       createdAt: new Date().toISOString(),
       posts: [],
       followers: 0,
@@ -68,14 +80,14 @@ function App() {
     // Store in localStorage
     const allUsers = getAllUsers();
     allUsers.push(newUser);
-    localStorage.setItem('piviUsers', JSON.stringify(allUsers));
+    saveAllUsers(allUsers);
     
     setUserId(userId);
     setUserEmail(email);
     setIsLoggedIn(true);
     localStorage.setItem('piviCurrentUser', JSON.stringify({ id: userId, email }));
-    console.log('🎉 SIGNUP_SUCCESS', newUser);
-    return true;
+    console.log('🎉 SIGNUP_SUCCESS', { userId, email });
+    return { success: true };
   };
 
   const handleLogout = () => {
