@@ -7,6 +7,7 @@ import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import Messages from './pages/Messages';
 import Upload from './pages/Upload';
+import { getUserByEmail, getAllUsers } from './utils/userDatabase';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,33 +16,66 @@ function App() {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('piviUser');
+    const savedUser = localStorage.getItem('piviCurrentUser');
     if (savedUser) {
       const user = JSON.parse(savedUser);
       setUserId(user.id);
       setUserEmail(user.email);
       setIsLoggedIn(true);
-      console.log('🔐 USER_RESTORED_FROM_STORAGE', user);
+      console.log('🔑 USER_RESTORED_FROM_STORAGE', user);
     }
   }, []);
 
-  const handleLogin = (email) => {
-    const userId = 'user_' + Date.now();
-    setUserId(userId);
-    setUserEmail(email);
+  const handleLogin = (email, password) => {
+    const user = getUserByEmail(email);
+    if (!user) {
+      console.log('❌ LOGIN_FAILED - USER_NOT_FOUND', { email });
+      return false;
+    }
+    
+    if (user.password !== password) {
+      console.log('❌ LOGIN_FAILED - WRONG_PASSWORD', { email });
+      return false;
+    }
+
+    setUserId(user.id);
+    setUserEmail(user.email);
     setIsLoggedIn(true);
-    localStorage.setItem('piviUser', JSON.stringify({ id: userId, email }));
-    console.log('✅ LOGIN_SUCCESS', { userId, email });
+    localStorage.setItem('piviCurrentUser', JSON.stringify({ id: user.id, email: user.email }));
+    console.log('✅ LOGIN_SUCCESS', { userId: user.id, email });
+    return true;
   };
 
-  const handleSignUp = (email) => {
+  const handleSignUp = (email, password) => {
+    // Check if email already exists
+    const existingUser = getUserByEmail(email);
+    if (existingUser) {
+      console.log('❌ SIGNUP_FAILED - EMAIL_ALREADY_EXISTS', { email });
+      return false;
+    }
+
     const userId = 'user_' + Date.now();
-    const newUser = { id: userId, email, createdAt: new Date().toISOString() };
+    const newUser = { 
+      id: userId, 
+      email, 
+      password,
+      createdAt: new Date().toISOString(),
+      posts: [],
+      followers: 0,
+      following: 0
+    };
+    
+    // Store in localStorage
+    const allUsers = getAllUsers();
+    allUsers.push(newUser);
+    localStorage.setItem('piviUsers', JSON.stringify(allUsers));
+    
     setUserId(userId);
     setUserEmail(email);
     setIsLoggedIn(true);
-    localStorage.setItem('piviUser', JSON.stringify(newUser));
+    localStorage.setItem('piviCurrentUser', JSON.stringify({ id: userId, email }));
     console.log('🎉 SIGNUP_SUCCESS', newUser);
+    return true;
   };
 
   const handleLogout = () => {
@@ -49,7 +83,7 @@ function App() {
     setIsLoggedIn(false);
     setUserEmail('');
     setUserId('');
-    localStorage.removeItem('piviUser');
+    localStorage.removeItem('piviCurrentUser');
   };
 
   return (

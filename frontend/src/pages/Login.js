@@ -1,35 +1,66 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { getUserByEmail } from '../utils/userDatabase';
 import '../styles/Auth.css';
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
+    // Validation
     if (!email || !password) {
       setError('Email and password are required');
+      setLoading(false);
       return;
     }
 
     if (!email.includes('@')) {
       setError('Please enter a valid email');
+      setLoading(false);
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setLoading(false);
       return;
     }
 
-    console.log('🔐 LOGIN_ATTEMPT', { email, passwordLength: password.length });
-    onLogin(email);
-    navigate('/');
+    // Check if user exists
+    const user = getUserByEmail(email);
+    if (!user) {
+      console.log('❌ LOGIN_FAILED - EMAIL_NOT_FOUND', { email });
+      setError('Email not found. Please sign up first.');
+      setLoading(false);
+      return;
+    }
+
+    // Check password
+    if (user.password !== password) {
+      console.log('❌ LOGIN_FAILED - INVALID_PASSWORD', { email });
+      setError('Incorrect password. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    console.log('🔑 LOGIN_ATTEMPT', { email });
+    const success = onLogin(email, password);
+    
+    if (success) {
+      setLoading(false);
+      navigate('/');
+    } else {
+      setError('Login failed. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +78,7 @@ function Login({ onLogin }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="form-input"
+              disabled={loading}
             />
           </div>
 
@@ -59,12 +91,15 @@ function Login({ onLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="form-input"
+              disabled={loading}
             />
           </div>
 
           {error && <div className="error-message">{error}</div>}
 
-          <button type="submit" className="auth-btn">Sign In</button>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
         </form>
 
         <p className="auth-link">
