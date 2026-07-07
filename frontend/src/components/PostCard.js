@@ -1,11 +1,12 @@
 import React from 'react';
 import '../styles/PostCard.css';
 
-function PostCard({ post, onLike, onComment, onShare }) {
+function PostCard({ post, userId, onLike, onComment, onShare, onMessage }) {
   return (
     <div className="post-card">
       <div className="post-header">
         <span className="post-author">{post.author}</span>
+        <span className="post-time">{post.uploadedAt}</span>
       </div>
 
       <div className="post-image">
@@ -34,7 +35,7 @@ function PostCard({ post, onLike, onComment, onShare }) {
           </span>
         </div>
         <div className="stat">
-          <span className="message-btn">💬</span>
+          <span className="message-btn" onClick={() => onMessage(post.id)}>💌</span>
         </div>
       </div>
     </div>

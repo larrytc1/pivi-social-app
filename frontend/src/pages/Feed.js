@@ -4,12 +4,13 @@ import Navigation from '../components/Navigation';
 import PostCard from '../components/PostCard';
 import '../styles/Feed.css';
 
-function Feed({ userEmail, onLogout }) {
+function Feed({ userId, userEmail, onLogout }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('pictures');
   const [posts, setPosts] = useState([
     {
       id: 1,
+      userId: 'user_demo',
       author: '@youngshootsfx',
       title: 'Upper Deck',
       description: 'The dawn horizon.',
@@ -17,10 +18,12 @@ function Feed({ userEmail, onLogout }) {
       likes: 2,
       comments: 2,
       shares: 1,
-      liked: false
+      liked: false,
+      uploadedAt: '2 hours ago'
     },
     {
       id: 2,
+      userId: 'user_demo2',
       author: '@wanderlust',
       title: 'Mountain View',
       description: 'Breathtaking mountain scenery at sunset.',
@@ -28,7 +31,8 @@ function Feed({ userEmail, onLogout }) {
       likes: 5,
       comments: 3,
       shares: 2,
-      liked: false
+      liked: false,
+      uploadedAt: '1 hour ago'
     }
   ]);
 
@@ -38,7 +42,7 @@ function Feed({ userEmail, onLogout }) {
   };
 
   const handleTabChange = (tab) => {
-    console.log('TAB_CHANGED', tab);
+    console.log('🔄 TAB_CHANGED', { from: activeTab, to: tab, userId });
     setActiveTab(tab);
   };
 
@@ -46,7 +50,7 @@ function Feed({ userEmail, onLogout }) {
     setPosts(posts.map(post => {
       if (post.id === postId) {
         const newLiked = !post.liked;
-        console.log('LIKE_TOGGLED', { postId, liked: newLiked });
+        console.log('❤️ LIKE_TOGGLED', { postId, userId, liked: newLiked, totalLikes: newLiked ? post.likes + 1 : post.likes - 1 });
         return {
           ...post,
           liked: newLiked,
@@ -58,11 +62,15 @@ function Feed({ userEmail, onLogout }) {
   };
 
   const handleComment = (postId) => {
-    console.log('COMMENT_CLICKED', postId);
+    console.log('💬 COMMENT_OPENED', { postId, userId });
   };
 
   const handleShare = (postId) => {
-    console.log('SHARE_CLICKED', postId);
+    console.log('📤 SHARE_CLICKED', { postId, userId, timestamp: new Date().toISOString() });
+  };
+
+  const handleMessage = (postId) => {
+    console.log('💌 MESSAGE_CLICKED', { postId, userId });
   };
 
   const filteredPosts = activeTab === 'pictures' ? posts : [];
@@ -82,6 +90,7 @@ function Feed({ userEmail, onLogout }) {
             type="text" 
             placeholder="Search pictures..." 
             className="search-input"
+            onChange={(e) => console.log('🔍 SEARCH_INPUT', { query: e.target.value, userId })}
           />
         </div>
 
@@ -91,9 +100,11 @@ function Feed({ userEmail, onLogout }) {
               <PostCard 
                 key={post.id}
                 post={post}
+                userId={userId}
                 onLike={handleLike}
                 onComment={handleComment}
                 onShare={handleShare}
+                onMessage={handleMessage}
               />
             ))
           ) : (

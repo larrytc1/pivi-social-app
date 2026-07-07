@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import '../styles/Profile.css';
 
-function Profile({ userEmail, onLogout }) {
+function Profile({ userId, userEmail, onLogout }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    console.log('🚪 LOGOUT_FROM_PROFILE', { userId, email: userEmail });
     onLogout();
     navigate('/login');
   };
@@ -21,9 +22,17 @@ function Profile({ userEmail, onLogout }) {
       />
       <div className="feed-content">
         <div className="profile-card">
-          <h2>Your Profile</h2>
-          <p>Email: {userEmail}</p>
-          <p>Posts: 0</p>
+          <div className="profile-header">
+            <div className="profile-avatar">👤</div>
+            <h2>Your Profile</h2>
+          </div>
+          <div className="profile-details">
+            <p><strong>Email:</strong> {userEmail}</p>
+            <p><strong>User ID:</strong> {userId}</p>
+            <p><strong>Posts:</strong> 0</p>
+            <p><strong>Followers:</strong> 0</p>
+            <p><strong>Joined:</strong> {new Date().toLocaleDateString()}</p>
+          </div>
         </div>
       </div>
     </div>

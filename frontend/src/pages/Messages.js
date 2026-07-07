@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import '../styles/Messages.css';
 
-function Messages({ userEmail, onLogout }) {
+function Messages({ userId, userEmail, onLogout }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -21,8 +21,9 @@ function Messages({ userEmail, onLogout }) {
       />
       <div className="feed-content">
         <div className="messages-card">
-          <h2>Direct Messages</h2>
-          <p>You have no messages</p>
+          <h2>💬 Direct Messages</h2>
+          <p>You have no messages yet</p>
+          <p className="messages-hint">Start a conversation by messaging other users!</p>
         </div>
       </div>
     </div>
